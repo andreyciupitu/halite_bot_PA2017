@@ -1,0 +1,10 @@
+﻿  202v1.cpp
+c:\users\andrei\documents\github\halite_bot_pa2017\halitebot\halitebot\hlt.hpp(59): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+c:\users\andrei\documents\github\halite_bot_pa2017\halitebot\halitebot\hlt.hpp(67): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\andrei\documents\github\halite_bot_pa2017\halitebot\halitebot\networking.hpp(52): warning C4244: '=': conversion from 'short' to 'unsigned char', possible loss of data
+c:\users\andrei\documents\github\halite_bot_pa2017\halitebot\halitebot\networking.hpp(74): warning C4244: '=': conversion from 'unsigned short' to 'unsigned char', possible loss of data
+c:\users\andrei\documents\github\halite_bot_pa2017\halitebot\halitebot\networking.hpp(83): warning C4018: '<': signed/unsigned mismatch
+c:\users\andrei\documents\github\halite_bot_pa2017\halitebot\halitebot\networking.hpp(84): warning C4018: '<': signed/unsigned mismatch
+c:\users\andrei\documents\github\halite_bot_pa2017\halitebot\halitebot\networking.hpp(87): warning C4244: '=': conversion from 'short' to 'unsigned char', possible loss of data
+c:\users\andrei\documents\github\halite_bot_pa2017\halitebot\halitebot\202v1.cpp(15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  haliteBot.vcxproj -> C:\Users\Andrei\Documents\GitHub\halite_bot_PA2017\haliteBot\Debug\haliteBot.exe
