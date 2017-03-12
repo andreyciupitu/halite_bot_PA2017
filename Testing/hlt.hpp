@@ -136,6 +136,7 @@ namespace hlt
 	{
 		Location topLeft;
 		Location botRight;
+        unsigned char id;
 	};
 }
 

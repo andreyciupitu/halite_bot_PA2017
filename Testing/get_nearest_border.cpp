@@ -1,9 +1,9 @@
 #include "hlt.hpp"
-#include <iostream>
 
 int get_nearest_border(hlt::Player p, hlt::Location l)
 {
 	int min = 1000;
+	
 	/* Directia pe care o returnez/ */
 	int direction = STILL; 
 
