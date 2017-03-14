@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "stdafx.h"  //<-VISUAL STUDIO BULLSHIT
 #include <stdlib.h>
 #include <time.h>
 #include <cstdlib>
@@ -10,11 +10,10 @@
 
 #include "hlt.hpp"
 #include "networking.hpp"
+#include "Player.h"
 
 int main()
 {
-	/* RNG SEED */
-    srand(time(NULL));
 
     std::cout.sync_with_stdio(0);
 
@@ -26,12 +25,23 @@ int main()
     hlt::GameMap presentMap;
     getInit(myID, presentMap);
 
-	/* INITIALIZE PLAYER HERE
-	*
-	*
-	*	
-	*
-	*/
+	/* INITIALIZE PLAYER HERE */
+	
+	hlt::Location l;
+	for (unsigned short a = 0; a < presentMap.height; a++)
+	{
+		for (unsigned short b = 0; b < presentMap.width; b++)
+		{
+			if (presentMap.getSite({ b, a }).owner == myID)
+			{
+				l = { b, a };
+			}
+		}
+	}
+
+	/* DO MORE STUFF HERE */
+	
+	Player p(l, l, myID);
 
 	/* START */
     sendInit("202");
@@ -45,19 +55,12 @@ int main()
 
         getFrame(presentMap);
 
-        for(unsigned short a = 0; a < presentMap.height; a++)
-		{
-            for(unsigned short b = 0; b < presentMap.width; b++)
+        for(unsigned short i = 0; i < presentMap.width; i++)
+			for(unsigned short j = 0; j < presentMap.height; j++)
 			{
-                if (presentMap.getSite({ b, a }).owner == myID)
-				{
-					if (presentMap.getSite({ b, a }).strength < 6 * presentMap.getSite({ b, a }).production)
-						moves.insert({ {b, a}, STILL });
-					else
-						moves.insert({ { b, a }, (unsigned char)(rand() % 2 + 1) });
-                }
+				if (presentMap.getSite({ i, j }).owner == myID)
+					moves.insert(p.make_a_move(presentMap, { i, j }));
             }
-        }
 
 		/* END TURN */
         sendFrame(moves);

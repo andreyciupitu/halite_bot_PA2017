@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include <random>
+#include <fstream>
 
 #define STILL 0
 #define NORTH 1
@@ -47,12 +48,14 @@ namespace hlt
             height = 0;
             contents = std::vector< std::vector<Site> >(height, std::vector<Site>(width, { 0, 0, 0 }));
         }
+
         GameMap(const GameMap &otherMap)
 		{
             width = otherMap.width;
             height = otherMap.height;
             contents = otherMap.contents;
         }
+
         GameMap(int w, int h)
 		{
             width = w;
@@ -131,12 +134,6 @@ namespace hlt
         return ((l1Prod + m1.dir)*(l1Prod + m1.dir + 1) / 2) + m1.dir <
 			((l2Prod + m2.dir)*(l2Prod + m2.dir + 1) / 2) + m2.dir;
     }
-
-	struct Player
-	{
-		Location topLeft;
-		Location botRight;
-	};
 }
 
 #endif
