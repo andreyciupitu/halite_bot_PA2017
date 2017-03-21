@@ -21,7 +21,7 @@ int Player::get_nearest_border(hlt::GameMap &map, hlt::Location l)
 	
 	*/
 
-	int min_distance = 1000; //initializare cu valoare mai buna
+	int min_distance = map.height / 2;
 	int direction = STILL;
 
 	for (int i = 0; i < 4; i++)
@@ -45,6 +45,7 @@ int Player::get_nearest_border(hlt::GameMap &map, hlt::Location l)
 hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 {
 	hlt::Move result_move;
+	result_move.loc = l;
 
 	/* CURRENT TILE */
 	hlt::Site site = map.getSite(l);
@@ -52,11 +53,11 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 	/* CHECK IF THE TILE SHOULD MOVE */
 	if (site.strength < 5 * site.production)
 	{
-		result_move.loc = l;
 		result_move.dir = STILL;
 		return result_move;
 	}
 
+	/* IF THE TILE IS ON BORDER */
 	if (isOnBorder(map, l))
 	{
 		/* ATTACK IF POSSIBLE */
@@ -65,7 +66,6 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 			if (map.getSite(l, CARDINALS[i]).owner != id &&
 				map.getSite(l, CARDINALS[i]).strength < site.strength)
 			{
-				result_move.loc = l;
 				result_move.dir = CARDINALS[i];
 				topLeft.x = std::min(topLeft.x, map.getLocation(l, CARDINALS[i]).x);
 				topLeft.y = std::min(topLeft.y, map.getLocation(l, CARDINALS[i]).y);
@@ -76,35 +76,13 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 		}
 
 		/* CAN'T ATTACK => STILL*/
-		result_move.loc = l;
 		result_move.dir = STILL;
 		return result_move;
 	}
 
 	/* SEND THE TILE TO A BORDER */
-	switch (get_nearest_border(map, l))
-	{
-	case NORTH:
-		result_move.loc = l;
-		result_move.dir = NORTH;
-		return result_move;
-	case EAST:
-		result_move.loc = l;
-		result_move.dir = EAST;
-		return result_move;
-	case SOUTH:
-		result_move.loc = l;
-		result_move.dir = SOUTH;
-		return result_move;
-	case WEST:
-		result_move.loc = l;
-		result_move.dir = WEST;
-		return result_move;
-	default:
-		result_move.loc = l;
-		result_move.dir = STILL;
-		return result_move;
-	}
+	result_move.dir = get_nearest_border(map, l);
+	return result_move;
 }
 
 bool Player::isOnBorder(hlt::GameMap &map, hlt::Location l)
