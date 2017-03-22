@@ -136,4 +136,7 @@ namespace hlt
     }
 }
 
+
+double evaluate(hlt::Site site);
+
 #endif

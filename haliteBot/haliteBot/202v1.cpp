@@ -1,10 +1,8 @@
 #include "stdafx.h"  //<-VISUAL STUDIO BULLSHIT
 #include <stdlib.h>
-#include <time.h>
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
-#include <time.h>
 #include <set>
 #include <fstream>
 
@@ -25,26 +23,16 @@ int main()
     hlt::GameMap presentMap;
     getInit(myID, presentMap);
 
-	/* INITIALIZE PLAYER HERE */
-	
-	hlt::Location l;
-	for (unsigned short a = 0; a < presentMap.height; a++)
-	{
-		for (unsigned short b = 0; b < presentMap.width; b++)
-		{
-			if (presentMap.getSite({ b, a }).owner == myID)
-			{
-				l = { b, a };
-			}
-		}
-	}
+	/* INITIALIZE PLAYER HERE */	
+	Player p(presentMap.width, presentMap.height, myID);
 
-	/* DO MORE STUFF HERE */
-	
-	Player p(l, l, myID);
+	/* DO MORE STUFF HERE
+		.....
+		.....
+	 */
 
 	/* START */
-    sendInit("202");
+    sendInit("202v1.2");
 
     std::set<hlt::Move> moves;
     while(true)
@@ -55,12 +43,16 @@ int main()
 
         getFrame(presentMap);
 
+		/* Get current strength map */
         for(unsigned short i = 0; i < presentMap.width; i++)
 			for(unsigned short j = 0; j < presentMap.height; j++)
-			{
+				p.strengthMap[i][j] = presentMap.getSite({ i, j }).strength;
+
+		/* Assign a move for each tile */
+        for(unsigned short i = 0; i < presentMap.width; i++)
+			for(unsigned short j = 0; j < presentMap.height; j++)
 				if (presentMap.getSite({ i, j }).owner == myID)
 					moves.insert(p.make_a_move(presentMap, { i, j }));
-            }
 
 		/* END TURN */
         sendFrame(moves);

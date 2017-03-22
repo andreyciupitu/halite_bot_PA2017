@@ -8,12 +8,10 @@
 
 #define WAIT_TIME 5
 
-Player::Player(hlt::Location topLeft, hlt::Location botRight, unsigned char id)
+Player::Player(int width, int height, unsigned char id)
 { 
-	this->topLeft = topLeft;
-	this->botRight = botRight;
 	this->id = id;
-	strengthMap = std::vector<std::vector<unsigned char>>(50, std::vector<unsigned char>(50, 0));
+	strengthMap = std::vector<std::vector<unsigned char>>(height, std::vector<unsigned char>(width, 0));
 }
 
 int Player::get_nearest_border(hlt::GameMap &map, hlt::Location l)
@@ -56,7 +54,7 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 	/* CHECK IF THE TILE SHOULD MOVE */
 	if (site.strength < WAIT_TIME * site.production || site.strength == 0)
 	{
-		strengthMap[l.x][l.y] += site.production;
+		updateStrengthMap(map, l, STILL);
 		result_move.dir = STILL;
 		return result_move;
 	}
@@ -84,14 +82,17 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 		/* CAN'T ATTACK => STILL*/
 		result_move.dir = bestMove;
 
+		/* Check if it's better to combine 
+		with a neighbouring tile */
 		if (bestMove == STILL)
-			for(int i = 0; i < 4; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				int maxStrength = strengthMap[l.x][l.y] + site.production;
 				hlt::Location neighbour = map.getLocation(l, CARDINALS[i]);
-				if(map.getSite(neighbour).owner == id && isOnBorder(map, neighbour))
+				if (map.getSite(neighbour).owner == id && isOnBorder(map, neighbour))
 				{
-					if(site.strength + strengthMap[neighbour.x][neighbour.y] > maxStrength && site.strength + strengthMap[neighbour.x][neighbour.y] <= 255)
+					if (site.strength + strengthMap[neighbour.x][neighbour.y] > maxStrength 
+						&& site.strength + strengthMap[neighbour.x][neighbour.y] <= 255)
 					{
 						maxStrength = site.strength + strengthMap[neighbour.x][neighbour.y];
 						result_move.dir = CARDINALS[i];
@@ -99,17 +100,13 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 				}
 			}
 
-		strengthMap[l.x][l.y] = 0;
-		hlt::Location neighbour = map.getLocation(l, result_move.dir);
-		strengthMap[neighbour.x][neighbour.y] += site.strength;
+		updateStrengthMap(map, l, result_move.dir);
 		return result_move;
 	}
 
 	/* SEND THE TILE TO A BORDER */
 	result_move.dir = get_nearest_border(map, l);
-	strengthMap[l.x][l.y] = 0;
-	hlt::Location neighbour = map.getLocation(l, result_move.dir);
-	strengthMap[neighbour.x][neighbour.y] += site.strength;
+	updateStrengthMap(map, l, result_move.dir);
 	return result_move;
 }
 
@@ -121,12 +118,23 @@ bool Player::isOnBorder(hlt::GameMap &map, hlt::Location l)
 	return false;
 }
 
-bool Player::isInside(hlt::Location l)
+void Player::updateStrengthMap(hlt::GameMap &map, hlt::Location l, int direction)
 {
-	return (topLeft.x <= l.x && topLeft.y <= l.y && l.x <= botRight.x && l.y <= botRight.y);
+	hlt::Site site = map.getSite(l);
+
+	/* STILL => INCREASE BY PRODUCTION */
+	if (direction == STILL)
+		strengthMap[l.x][l.y] += site.production;
+	else
+	{
+		strengthMap[l.x][l.y] = 0;
+		hlt::Location neighbour = map.getLocation(l, direction);
+		strengthMap[neighbour.x][neighbour.y] += site.strength;
+	}
 }
 
-double evaluate(hlt::Site site)
+/* EXPANSION HEURISTIC */
+double Player::evaluate(hlt::Site site)
 {
 	return site.strength == 0 ? site.production : site.production/(double)site.strength;
 }
