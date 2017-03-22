@@ -1,0 +1,37 @@
+Conţinutul repository-ului:
+
+ starter_packages/    - boţii pe baza cărora puteţi începe să codaţi
+ environment/         - engine-ul jocului 
+ replays/             - folder cu rezultatele rularii botului (fisiere tip *.hlt)
+ run.py               - scriptul de evaluare
+ halite-resources.zip - arhivă cu conținutul acestui repository
+ 
+===============
+Prerequisites
+===============
+
+Pentru rularea scriptului de evaluare aveți nevoie de Python (>= 2.7.2)
+Linux: sudo apt-get install python
+
+===============
+Testare
+===============
+
+Scriptul de evaluare va rula "make" înainte de execuția propriu-zisă,
+dacă un fișier de tip "Makefile" se află in path-ul curent.
+
+Example rulare:
+
+C++ Bot:
+    python ./run.py --cmd "./MyBot" --round 1
+
+Java Bot:
+    python ./run.py --cmd "java MyBot" --round 1
+
+Python:
+    python ./run.py --cmd "python3 MyBot.py" --round 1
+    
+Arguments
+    --cmd       Comanda de execuție pentru bot (trebuie sa fie validă pentru locația curentă)
+    --round     (Optional) Indicele etapei (1, 2, 3), default 1
+    --clean     (Optional) Șterge fișierele de log/replays

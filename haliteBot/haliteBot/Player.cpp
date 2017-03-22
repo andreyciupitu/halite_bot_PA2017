@@ -74,6 +74,15 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 				return result_move;
 			}
 		}
+		for(int i = 0; i < 4; i++)
+		{
+			if(map.getSite(l, CARDINALS[i]).owner == id && isOnBorder(map, map.getLocation(l, CARDINALS[i])))
+				if(map.getSite(l).strength + map.getSite(l, CARDINALS[i]).strength < 255)
+				{
+					result_move.dir = CARDINALS[i];
+					return result_move;
+				}
+		}
 
 		/* CAN'T ATTACK => STILL*/
 		result_move.dir = STILL;
