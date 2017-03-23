@@ -1,4 +1,4 @@
-//#include "stdafx.h"  //<-VISUAL STUDIO BULLSHIT
+#include "stdafx.h"  //<-VISUAL STUDIO BULLSHIT
 #include <stdlib.h>
 #include <cstdlib>
 #include <ctime>
@@ -32,7 +32,7 @@ int main()
 	 */
 
 	/* START */
-    sendInit("202v1.2");
+    sendInit("202v1.2.2");
 
     std::set<hlt::Move> moves;
     while(true)

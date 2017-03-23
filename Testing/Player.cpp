@@ -1,4 +1,4 @@
-//#include "stdafx.h" //<--VISUAL STUDIO BULLSHIT
+#include "stdafx.h" //<--VISUAL STUDIO BULLSHIT
 #include <algorithm>
 #include <cmath>
 #include <fstream>
@@ -11,7 +11,7 @@
 Player::Player(int width, int height, unsigned char id)
 { 
 	this->id = id;
-	strengthMap = std::vector<std::vector<unsigned char>>(height, std::vector<unsigned char>(width, 0));
+	strengthMap = std::vector<std::vector<unsigned char>>(width, std::vector<unsigned char>(height, 0));
 }
 
 int Player::get_nearest_border(hlt::GameMap &map, hlt::Location l)
@@ -127,7 +127,7 @@ void Player::updateStrengthMap(hlt::GameMap &map, hlt::Location l, int direction
 		strengthMap[l.x][l.y] += site.production;
 	else
 	{
-		strengthMap[l.x][l.y] = 0;
+		strengthMap[l.x][l.y] -= site.strength;
 		hlt::Location neighbour = map.getLocation(l, direction);
 		strengthMap[neighbour.x][neighbour.y] += site.strength;
 	}
