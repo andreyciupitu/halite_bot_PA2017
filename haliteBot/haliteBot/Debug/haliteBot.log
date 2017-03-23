@@ -1,4 +1,5 @@
 ﻿  Player.cpp
 c:\users\andrei\documents\github\halite_bot_pa2017\halitebot\halitebot\hlt.hpp(76): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
 c:\users\andrei\documents\github\halite_bot_pa2017\halitebot\halitebot\hlt.hpp(86): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\andrei\documents\github\halite_bot_pa2017\halitebot\halitebot\player.cpp(41): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   haliteBot.vcxproj -> C:\Users\Andrei\Documents\GitHub\halite_bot_PA2017\haliteBot\Debug\haliteBot.exe

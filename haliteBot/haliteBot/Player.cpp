@@ -127,7 +127,7 @@ void Player::updateStrengthMap(hlt::GameMap &map, hlt::Location l, int direction
 		strengthMap[l.x][l.y] += site.production;
 	else
 	{
-		strengthMap[l.x][l.y] = 0;
+		strengthMap[l.x][l.y] -= site.strength;
 		hlt::Location neighbour = map.getLocation(l, direction);
 		strengthMap[neighbour.x][neighbour.y] += site.strength;
 	}

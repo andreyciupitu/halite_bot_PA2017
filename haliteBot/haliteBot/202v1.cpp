@@ -32,7 +32,7 @@ int main()
 	 */
 
 	/* START */
-    sendInit("202v1.2");
+    sendInit("202v1.2.2");
 
     std::set<hlt::Move> moves;
     while(true)
