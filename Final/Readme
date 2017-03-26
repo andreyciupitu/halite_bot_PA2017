@@ -10,7 +10,7 @@ Membri: Stefan Adrian-Cosmin, 322CC
 ========== Mod de compilare ====================================================
 
 Compilarea se face din linia de comanda, folosind Makefile-ul, sursele si
-header-ele se afla in folderul src/, iar exacutabilul se afla in folderul curent.
+header-ele se afla in folderul src, iar exacutabilul se afla in folderul curent.
 
 ========== Surse de inspiratie =================================================
 

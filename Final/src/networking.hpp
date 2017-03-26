@@ -80,8 +80,8 @@ namespace detail{
             }
         }
 
-        for (int a = 0; a < map.contents.size(); a++) {
-            for (int b = 0; b < map.contents[a].size(); b++) {
+        for (size_t a = 0; a < map.contents.size(); a++) {
+            for (size_t b = 0; b < map.contents[a].size(); b++) {
                 short strengthShort;
                 iss >> strengthShort;
                 map.contents[a][b].strength = strengthShort;
