@@ -21,6 +21,7 @@ $(EXECUTABLE): $(OBJECTS)
 	@echo "Linking complete!"
 
 $(OBJECTS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INCLUDES)
+	@mkdir -p obj/
 	$(CC) $(CFLAGS) $< -o $@
 	@echo "Compiled $< successfully!"
 
