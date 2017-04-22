@@ -16,7 +16,7 @@ private:
 	int get_nearest_border(hlt::GameMap &map, hlt::Location l);
 	bool isOnBorder(hlt::GameMap &map, hlt::Location l);
 	void updateStrengthMap(hlt::GameMap &map, hlt::Location l, int direction);
-	double evaluate(hlt::Site site);
+	double evaluate(hlt::GameMap &map, hlt:: Location l);
 };
 
 #endif // !PLAYER_H

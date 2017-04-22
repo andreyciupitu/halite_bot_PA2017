@@ -68,7 +68,7 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 			hlt::Site nextSite = map.getSite(l, CARDINALS[i]);
 			if (nextSite.owner != id && nextSite.strength < site.strength)
 			{
-				double score = evaluate(nextSite);
+				double score = evaluate(map, map.getLocation(l, CARDINALS[i]));
 				if (score >= maxScore)
 				{
 					maxScore = score;
@@ -132,7 +132,20 @@ void Player::updateStrengthMap(hlt::GameMap &map, hlt::Location l, int direction
 }
 
 /* EXPANSION HEURISTIC */
-double Player::evaluate(hlt::Site site)
+double Player::evaluate(hlt::GameMap &map, hlt::Location l)
 {
-	return site.strength == 0 ? site.production : site.production / (double)site.strength;
+	hlt::Site site = map.getSite(l);
+	if (site.owner == 0)
+		return site.strength == 0 ? site.production : site.production / (double)site.strength;
+	else
+	{
+		int damageTaken = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			hlt::Site neighbour = map.getSite(l, i);
+			if (neighbour.owner != site.owner)
+				damageTaken += neighbour.strength;
+		}
+		return damageTaken;
+	}
 }
