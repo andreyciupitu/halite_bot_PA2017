@@ -23,7 +23,7 @@ int main()
     getInit(myID, presentMap);
 
 	/* INITIALIZE PLAYER HERE */
-	Player p(presentMap.width, presentMap.height, myID);
+	Player bot(presentMap.width, presentMap.height, myID);
 
 	/* DO MORE STUFF HERE
 		.....
@@ -31,7 +31,7 @@ int main()
 	 */
 
 	/* START GAME */
-    sendInit("202v1.2.2");
+    sendInit("202v2");
 
     std::set<hlt::Move> moves;
     while(true)
@@ -45,13 +45,46 @@ int main()
 		/* Get current strength map */
         for(unsigned short i = 0; i < presentMap.width; i++)
 			for(unsigned short j = 0; j < presentMap.height; j++)
-				p.strengthMap[i][j] = presentMap.getSite({ i, j }).strength;
-
+			{
+                hlt::Site site = presentMap.getSite({ i, j });
+                if (site.owner == myID)
+                {
+                    bot.directionMap[i][j] = STILL;
+                    bot.strengthMap[i][j] = site.strength;
+                }
+                else
+                {
+                    bot.strengthMap[i][j] = -1 * site.strength;
+                    bot.directionMap[i][j] = -1;
+                }
+            }
 		/* Assign a move for each tile */
         for(unsigned short i = 0; i < presentMap.width; i++)
 			for(unsigned short j = 0; j < presentMap.height; j++)
 				if (presentMap.getSite({ i, j }).owner == myID)
-					moves.insert(p.make_a_move(presentMap, { i, j }));
+				{
+                    hlt::Move move = bot.make_a_move(presentMap, {i, j});
+                    bot.directionMap[i][j] = move.dir;
+                }
+                
+        int last_turn = presentMap.height * presentMap.width;
+        int fixxed = bot.canSaveStrength(presentMap);
+        while (last_turn > fixxed)
+        {
+            last_turn = fixxed;
+            fixxed = bot.canSaveStrength(presentMap);
+        }
+
+        for(unsigned short i = 0; i < presentMap.width; i++)
+            for(unsigned short j = 0; j < presentMap.height; j++)
+                if (presentMap.getSite({ i, j }).owner == myID)
+                {
+                    hlt::Move move;
+                    move.dir = bot.directionMap[i][j];
+                    move.loc.x = i;
+                    move.loc.y = j;
+                    moves.insert(move);
+                }
 
 		/* END TURN */
         sendFrame(moves);

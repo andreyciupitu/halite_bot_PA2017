@@ -8,7 +8,8 @@
 Player::Player(int width, int height, unsigned char id)
 {
 	this->id = id;
-	strengthMap = std::vector<std::vector<unsigned char>>(width, std::vector<unsigned char>(height, 0));
+	strengthMap = std::vector< std::vector<int> >(width, std::vector<int>(height, 0));
+	directionMap = std::vector< std::vector<int> >(width, std::vector<int>(height, 0));
 }
 
 int Player::get_nearest_border(hlt::GameMap &map, hlt::Location l)
@@ -104,6 +105,27 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 
 	/* SEND THE TILE TO A BORDER */
 	result_move.dir = get_nearest_border(map, l);
+
+	// SULITA LU' NICU UNCOMMENT 4 VICTORY
+/*
+	int dist = 0;
+	hlt::Location aux = l;
+	while (dist < 6)
+	{
+		if(map.getSite(aux,result_move.dir).owner != id && map.getSite(aux,result_move.dir).owner != 0)
+		{
+			break;
+		}
+		aux = map.getLocation(aux,result_move.dir);
+		dist ++;
+	}
+
+	if ( (dist > 4 && dist < 6) || map.getSite(l,result_move.dir).strength == 255)
+	{
+		result_move.dir = STILL;
+	}
+
+*/
 	updateStrengthMap(map, l, result_move.dir);
 	return result_move;
 }
@@ -114,6 +136,55 @@ bool Player::isOnBorder(hlt::GameMap &map, hlt::Location l)
 		if (map.getSite(l, CARDINALS[i]).owner != id)
 			return true;
 	return false;
+}
+
+int Player::canSaveStrength(hlt::GameMap &map)
+{
+	int count = 0;
+	for (unsigned short i = 0; i < map.width; i++)
+		for (unsigned short j = 0; j < map.height; j++)
+			if (strengthMap[i][j] > 255)
+			{
+				count++;
+				if (directionMap[i][j] == STILL)
+					for (int k = 0; k < 4; k++)
+					{
+						hlt::Location neighbour = map.getLocation({i, j}, CARDINALS[k]);
+						if (directionMap[neighbour.x][neighbour.y] == (CARDINALS[k] + 2) % 4 + 1)
+						{
+							updateStrengthMap(map, {i, j}, CARDINALS[k]);
+							directionMap[i][j] = CARDINALS[k];
+							break;
+						}
+					}
+				else
+					for (int k = 0; k < 4; k++)
+					{
+						hlt::Location neighbour = map.getLocation({i, j}, CARDINALS[k]);
+						if (directionMap[neighbour.x][neighbour.y] == (CARDINALS[k] + 2) % 4 + 1)
+						{
+							int right =  (CARDINALS[k] + 3) % 4 + 1;
+							int left = (CARDINALS[k] + 1) % 4 + 1;
+							hlt::Location rightChoice = map.getLocation(neighbour, right);
+							hlt::Location leftChoice = map.getLocation(neighbour, left);
+							int move_right = map.getSite(neighbour).strength + strengthMap[rightChoice.x][rightChoice.y];
+							int move_left = map.getSite(neighbour).strength + strengthMap[leftChoice.x][leftChoice.y];
+							if (move_left < move_right && move_left < strengthMap[i][j])
+							{
+								updateStrengthMap(map, neighbour, left);
+								directionMap[neighbour.x][neighbour.y] = left;
+							}
+							else
+								if (move_right < strengthMap[i][j])
+								{
+									updateStrengthMap(map, neighbour, right);
+									directionMap[neighbour.x][neighbour.y] = right;
+								}
+							break;
+						}
+					}
+			}
+	return count;
 }
 
 void Player::updateStrengthMap(hlt::GameMap &map, hlt::Location l, int direction)
@@ -135,8 +206,8 @@ void Player::updateStrengthMap(hlt::GameMap &map, hlt::Location l, int direction
 double Player::evaluate(hlt::GameMap &map, hlt::Location l)
 {
 	hlt::Site site = map.getSite(l);
-	if (site.owner == 0)
-		return site.strength == 0 ? site.production : site.production / (double)site.strength;
+	if (site.owner == 0 && site.strength > 0)
+		return site.production : site.production / (double)site.strength;
 	else
 	{
 		int damageTaken = 0;

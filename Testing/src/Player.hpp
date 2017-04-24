@@ -6,11 +6,13 @@
 class Player
 {
 public:
-	std::vector< std::vector<unsigned char> > strengthMap;
+	std::vector< std::vector<int> > strengthMap;
+	std::vector< std::vector<int> > directionMap;
 	unsigned char id;
 
 	Player(int width, int height, unsigned char id);
 	hlt::Move make_a_move(hlt::GameMap &map, hlt::Location l);
+	int canSaveStrength(hlt::GameMap &map);
 
 private:
 	int get_nearest_border(hlt::GameMap &map, hlt::Location l);
