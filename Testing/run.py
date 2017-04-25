@@ -8,6 +8,8 @@ import argparse
 import math
 from pprint import pprint as pp
 
+import platform
+
 
 def produce_game_environment():
 
@@ -203,7 +205,9 @@ def round_two(cmd, browser=None):
         (50, 50, 42, 0.1),
     ]
 
-    env.bots.append("./bots/DBot_linux_64bit")
+    arch, _ = platform.architecture()
+    env.bots.append("./bots/DBot_linux_" + arch)
+
     player_score = 0.0
 
     for height, width, seed, points in games:

@@ -90,8 +90,8 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 				hlt::Location neighbour = map.getLocation(l, CARDINALS[i]);
 				if (map.getSite(neighbour).owner == id && isOnBorder(map, neighbour))
 				{
-					if (site.strength + strengthMap[neighbour.x][neighbour.y] > maxStrength
-						&& site.strength + strengthMap[neighbour.x][neighbour.y] <= 255)
+					if (site.strength + map.getSite(neighbour).strength > maxStrength
+						&& site.strength + map.getSite(neighbour).strength <= 255)
 					{
 						maxStrength = site.strength + strengthMap[neighbour.x][neighbour.y];
 						result_move.dir = CARDINALS[i];
@@ -107,8 +107,7 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 	result_move.dir = get_nearest_border(map, l);
 
 	// SULITA LU' NICU UNCOMMENT 4 VICTORY
-/*
-	int dist = 0;
+/*	int dist = 0;
 	hlt::Location aux = l;
 	while (dist < 6)
 	{
@@ -120,11 +119,10 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 		dist ++;
 	}
 
-	if ( (dist > 4 && dist < 6) || map.getSite(l,result_move.dir).strength == 255)
+	if  (dist == 5 && map.getSite(l).strength < 255)
 	{
 		result_move.dir = STILL;
 	}
-
 */
 	updateStrengthMap(map, l, result_move.dir);
 	return result_move;
@@ -150,21 +148,22 @@ int Player::canSaveStrength(hlt::GameMap &map)
 					for (int k = 0; k < 4; k++)
 					{
 						hlt::Location neighbour = map.getLocation({i, j}, CARDINALS[k]);
-						if (directionMap[neighbour.x][neighbour.y] == (CARDINALS[k] + 2) % 4 + 1)
+						if (directionMap[neighbour.x][neighbour.y] == (CARDINALS[k] + 2) % 4)
 						{
 							updateStrengthMap(map, {i, j}, CARDINALS[k]);
 							directionMap[i][j] = CARDINALS[k];
 							break;
 						}
 					}
-				else
+				else//if (strengthMap[i][j] > 255)
 					for (int k = 0; k < 4; k++)
 					{
 						hlt::Location neighbour = map.getLocation({i, j}, CARDINALS[k]);
-						if (directionMap[neighbour.x][neighbour.y] == (CARDINALS[k] + 2) % 4 + 1)
+						if (directionMap[neighbour.x][neighbour.y] == ((CARDINALS[k] + 2) % 4)
+							&& map.getSite(neighbour).owner == id)
 						{
-							int right =  (CARDINALS[k] + 3) % 4 + 1;
-							int left = (CARDINALS[k] + 1) % 4 + 1;
+							int right =  (CARDINALS[k] + 3) % 4;
+							int left = (CARDINALS[k] + 1) % 4;
 							hlt::Location rightChoice = map.getLocation(neighbour, right);
 							hlt::Location leftChoice = map.getLocation(neighbour, left);
 							int move_right = map.getSite(neighbour).strength + strengthMap[rightChoice.x][rightChoice.y];
@@ -180,6 +179,8 @@ int Player::canSaveStrength(hlt::GameMap &map)
 									updateStrengthMap(map, neighbour, right);
 									directionMap[neighbour.x][neighbour.y] = right;
 								}
+								else
+									continue;
 							break;
 						}
 					}
@@ -207,7 +208,7 @@ double Player::evaluate(hlt::GameMap &map, hlt::Location l)
 {
 	hlt::Site site = map.getSite(l);
 	if (site.owner == 0 && site.strength > 0)
-		return site.production : site.production / (double)site.strength;
+		return site.production / (double)site.strength;
 	else
 	{
 		int damageTaken = 0;

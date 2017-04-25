@@ -1,0 +1,770 @@
+Turn1
+aici0 0
+Turn2
+aici0 0
+Turn3
+aici0 0
+Turn4
+aici0 0
+Turn5
+aici0 0
+Turn6
+aici0 0
+Turn7
+aici0 0
+Turn8
+aici0 0
+Turn9
+aici0 0
+Turn10
+aici0 0
+Turn11
+aici0 0
+Turn12
+aici0 0
+Turn13
+aici0 0
+Turn14
+aici0 0
+Turn15
+aici0 0
+Turn16
+aici0 0
+Turn17
+aici0 0
+Turn18
+aici0 0
+Turn19
+aici0 0
+Turn20
+aici0 0
+Turn21
+aici0 0
+Turn22
+aici0 0
+Turn23
+aici0 0
+Turn24
+aici0 0
+Turn25
+aici0 0
+Turn26
+aici0 0
+Turn27
+aici0 0
+Turn28
+aici0 0
+Turn29
+aici0 0
+Turn30
+aici0 0
+Turn31
+aici0 0
+Turn32
+aici0 0
+Turn33
+aici0 0
+Turn34
+aici0 0
+Turn35
+aici0 0
+Turn36
+aici0 0
+Turn37
+aici0 0
+Turn38
+aici0 0
+Turn39
+aici0 0
+Turn40
+aici0 0
+Turn41
+aici0 0
+Turn42
+aici0 0
+Turn43
+aici0 0
+Turn44
+aici0 0
+Turn45
+aici0 0
+Turn46
+aici0 0
+Turn47
+aici0 0
+Turn48
+aici0 0
+Turn49
+aici0 0
+Turn50
+aici0 0
+Turn51
+aici0 0
+Turn52
+aici0 0
+Turn53
+aici0 0
+Turn54
+aici0 0
+Turn55
+aici0 0
+Turn56
+aici0 0
+Turn57
+aici0 0
+Turn58
+aici0 0
+Turn59
+aici0 0
+Turn60
+aici0 0
+Turn61
+aici0 0
+Turn62
+aici0 0
+Turn63
+aici0 0
+Turn64
+aici0 0
+Turn65
+aici0 0
+Turn66
+aici0 0
+Turn67
+aici0 0
+Turn68
+aici0 0
+Turn69
+aici0 0
+Turn70
+aici0 0
+Turn71
+aici0 0
+Turn72
+aici0 0
+Turn73
+aici0 0
+Turn74
+aici0 0
+Turn75
+aici0 0
+Turn76
+aici0 0
+Turn77
+aici0 0
+Turn78
+aici0 0
+Turn79
+aici0 0
+Turn80
+aici0 0
+Turn81
+aici0 0
+Turn82
+aici0 0
+Turn83
+aici0 0
+Turn84
+aici0 0
+Turn85
+aici0 0
+Turn86
+aici0 0
+Turn87
+aici0 0
+Turn88
+aici0 0
+Turn89
+aici0 0
+Turn90
+aici0 0
+Turn91
+aici0 0
+Turn92
+aici0 0
+Turn93
+aici0 0
+Turn94
+aici0 0
+Turn95
+aici0 0
+Turn96
+aici0 0
+Turn97
+aici0 0
+Turn98
+aici0 0
+Turn99
+aici0 0
+Turn100
+aici0 0
+Turn101
+aici0 0
+Turn102
+aici0 0
+Turn103
+aici0 0
+Turn104
+aici0 0
+Turn105
+aici0 0
+Turn106
+aici0 0
+Turn107
+aici0 0
+Turn108
+aici0 0
+Turn109
+aici0 0
+Turn110
+aici0 0
+Turn111
+aici0 0
+Turn112
+aici0 0
+Turn113
+aici0 0
+Turn114
+aici0 0
+Turn115
+aici0 0
+Turn116
+aici0 0
+Turn117
+aici0 0
+Turn118
+aici0 0
+Turn119
+aici0 0
+Turn120
+aici0 0
+Turn121
+aici0 0
+Turn122
+aici0 0
+Turn123
+aici0 0
+Turn124
+aici0 0
+Turn125
+aici0 0
+Turn126
+aici0 0
+Turn127
+aici0 0
+Turn128
+aici0 0
+Turn129
+aici0 0
+Turn130
+aici0 0
+Turn131
+aici0 0
+Turn132
+aici0 0
+Turn133
+aici0 0
+Turn134
+aici0 0
+Turn135
+aici0 0
+Turn136
+aici0 0
+Turn137
+aici0 0
+Turn138
+aici0 0
+Turn139
+aici0 0
+Turn140
+aici0 0
+Turn141
+aici0 0
+Turn142
+aici0 0
+Turn143
+aici0 0
+Turn144
+aici0 0
+Turn145
+aici0 0
+Turn146
+aici0 0
+Turn147
+aici0 0
+Turn148
+aici0 0
+Turn149
+aici0 0
+Turn150
+aici0 0
+Turn151
+aici0 0
+Turn152
+aici0 0
+Turn153
+aici0 0
+Turn154
+aici0 0
+Turn155
+aici0 0
+Turn156
+aici0 0
+Turn157
+aici0 0
+Turn158
+aici0 0
+Turn159
+aici0 0
+Turn160
+aici0 0
+Turn161
+aici0 0
+Turn162
+aici0 0
+Turn163
+aici0 0
+Turn164
+aici0 0
+Turn165
+aici0 0
+Turn166
+aici0 0
+Turn167
+aici0 0
+Turn168
+aici0 0
+Turn169
+aici0 0
+Turn170
+aici0 0
+Turn171
+aici0 0
+Turn172
+aici0 0
+Turn173
+aici0 0
+Turn174
+aici0 0
+Turn175
+aici0 0
+Turn176
+aici1 1
+Turn177
+aici0 0
+Turn178
+aici0 0
+Turn179
+aici0 0
+Turn180
+aici0 0
+Turn181
+aici1 0
+Turn181
+aici0 0
+Turn182
+aici0 0
+Turn183
+aici1 1
+Turn184
+aici1 1
+Turn185
+aici0 0
+Turn186
+aici2 1
+Turn186
+aici1 1
+Turn187
+aici3 2
+Turn187
+aici2 2
+Turn188
+aici2 2
+Turn189
+aici3 2
+Turn189
+aici2 2
+Turn190
+aici3 2
+Turn190
+aici2 2
+Turn191
+aici1 1
+Turn192
+aici4 4
+Turn193
+aici4 4
+Turn194
+aici5 4
+Turn194
+aici4 4
+Turn195
+aici5 1
+Turn195
+aici1 1
+Turn196
+aici3 0
+Turn196
+aici0 0
+Turn197
+aici2 0
+Turn197
+aici0 0
+Turn198
+aici3 1
+Turn198
+aici1 1
+Turn199
+aici8 6
+Turn199
+aici6 6
+Turn200
+aici4 3
+Turn200
+aici3 3
+Turn201
+aici8 5
+Turn201
+aici5 5
+Turn202
+aici7 6
+Turn202
+aici6 6
+Turn203
+aici11 8
+Turn203
+aici8 8
+Turn204
+aici8 7
+Turn204
+aici7 7
+Turn205
+aici9 5
+Turn205
+aici5 5
+Turn206
+aici9 7
+Turn206
+aici7 8
+Turn207
+aici11 9
+Turn207
+aici9 10
+Turn208
+aici11 10
+Turn208
+aici10 10
+Turn209
+aici11 9
+Turn209
+aici9 9
+Turn210
+aici11 10
+Turn210
+aici10 10
+Turn211
+aici11 9
+Turn211
+aici9 9
+Turn212
+aici13 10
+Turn212
+aici10 10
+Turn213
+aici13 6
+Turn213
+aici6 6
+Turn214
+aici12 7
+Turn214
+aici7 8
+Turn215
+aici13 10
+Turn215
+aici10 11
+Turn216
+aici14 10
+Turn216
+aici10 10
+Turn217
+aici19 14
+Turn217
+aici14 14
+Turn218
+aici17 11
+Turn218
+aici11 11
+Turn219
+aici17 12
+Turn219
+aici12 12
+Turn220
+aici17 12
+Turn220
+aici12 13
+Turn221
+aici17 12
+Turn221
+aici12 12
+Turn222
+aici20 15
+Turn222
+aici15 14
+Turn222
+aici14 14
+Turn223
+aici15 10
+Turn223
+aici10 11
+Turn224
+aici16 11
+Turn224
+aici11 11
+Turn225
+aici16 13
+Turn225
+aici13 12
+Turn225
+aici12 12
+Turn226
+aici23 17
+Turn226
+aici17 17
+Turn227
+aici28 19
+Turn227
+aici19 19
+Turn228
+aici31 20
+Turn228
+aici20 20
+Turn229
+aici28 22
+Turn229
+aici22 22
+Turn230
+aici22 17
+Turn230
+aici17 16
+Turn230
+aici16 16
+Turn231
+aici17 9
+Turn231
+aici9 9
+Turn232
+aici20 11
+Turn232
+aici11 11
+Turn233
+aici27 15
+Turn233
+aici15 15
+Turn234
+aici31 21
+Turn234
+aici21 21
+Turn235
+aici24 18
+Turn235
+aici18 18
+Turn236
+aici31 24
+Turn236
+aici24 24
+Turn237
+aici36 26
+Turn237
+aici26 25
+Turn237
+aici25 25
+Turn238
+aici31 21
+Turn238
+aici21 21
+Turn239
+aici30 24
+Turn239
+aici24 24
+Turn240
+aici29 21
+Turn240
+aici21 21
+Turn241
+aici40 36
+Turn241
+aici36 36
+Turn242
+aici41 33
+Turn242
+aici33 33
+Turn243
+aici45 36
+Turn243
+aici36 36
+Turn244
+aici51 39
+Turn244
+aici39 39
+Turn245
+aici46 36
+Turn245
+aici36 36
+Turn246
+aici39 28
+Turn246
+aici28 28
+Turn247
+aici41 31
+Turn247
+aici31 33
+Turn248
+aici55 45
+Turn248
+aici45 46
+Turn249
+aici49 41
+Turn249
+aici41 41
+Turn250
+aici54 43
+Turn250
+aici43 43
+Turn251
+aici60 49
+Turn251
+aici49 49
+Turn252
+aici52 43
+Turn252
+aici43 43
+Turn253
+aici62 51
+Turn253
+aici51 52
+Turn254
+aici73 63
+Turn254
+aici63 64
+Turn255
+aici69 57
+Turn255
+aici57 55
+Turn255
+aici55 57
+Turn256
+aici71 54
+Turn256
+aici54 56
+Turn257
+aici71 55
+Turn257
+aici55 56
+Turn258
+aici89 64
+Turn258
+aici64 62
+Turn258
+aici62 63
+Turn259
+aici74 58
+Turn259
+aici58 59
+Turn260
+aici87 76
+Turn260
+aici76 73
+Turn260
+aici73 73
+Turn261
+aici92 82
+Turn261
+aici82 82
+Turn262
+aici87 81
+Turn262
+aici81 78
+Turn262
+aici78 77
+Turn262
+aici77 76
+Turn262
+aici76 78
+Turn263
+aici97 80
+Turn263
+aici80 81
+Turn264
+aici103 98
+Turn264
+aici98 94
+Turn264
+aici94 97
+Turn265
+aici112 96
+Turn265
+aici96 99
+Turn266
+aici105 82
+Turn266
+aici82 82
+Turn267
+aici122 102
+Turn267
+aici102 101
+Turn267
+aici101 101
+Turn268
+aici126 98
+Turn268
+aici98 97
+Turn268
+aici97 96
+Turn268
+aici96 94
+Turn268
+aici94 94
+Turn269
+aici113 92
+Turn269
+aici92 92
+Turn270
+aici115 104
+Turn270
+aici104 107
+Turn271
+aici115 103
+Turn271
+aici103 106
+Turn272
+aici129 115
+Turn272
+aici115 111
+Turn272
+aici111 116
+Turn273
+aici117 94
+Turn273
+aici94 95
+Turn274
+aici136 114
+Turn274
+aici114 114
+Turn275
+aici140 121
+Turn275
+aici121 119
+Turn275
+aici119 120
+Turn276
+aici146 135
+Turn276
+aici135 136
+Turn277
+aici146 141
+Turn277
+aici141 138
+Turn277
+aici138 135
+Turn277
+aici135 135

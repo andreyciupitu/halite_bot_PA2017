@@ -16,7 +16,7 @@ int main()
 
 	/* ERROR/DEBUG LOG FILE */
 	std::ofstream fout("output_log.txt");
-	fout.close();
+	//fout.close();
 
     unsigned char myID;
     hlt::GameMap presentMap;
@@ -32,11 +32,12 @@ int main()
 
 	/* START GAME */
     sendInit("202v2");
+    int count = 0;
 
     std::set<hlt::Move> moves;
     while(true)
 	{
-
+        count++;
 		/* RESET MOVES */
         moves.clear();
 
@@ -89,6 +90,6 @@ int main()
 		/* END TURN */
         sendFrame(moves);
     }
-
+    fout.close();
     return 0;
 }
