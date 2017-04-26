@@ -327,13 +327,18 @@ void Halite::output(std::string filename) {
         j["map_conquered"] = false;
     }
 
-    gameFile << j;
+    for (auto player : stats.player_statistics) {
+        if (player.rank == 1) {
+            j["winner"] = player_names[player.tag - 1];
+        }
+    }
 
+    gameFile << j;
     gameFile.flush();
     gameFile.close();
 }
 
-GameStatistics Halite::runGame(std::vector<std::string> * names_, unsigned int seed, unsigned int id) {
+GameStatistics& Halite::runGame(std::vector<std::string> * names_, unsigned int seed, unsigned int id) {
     //For rankings
     std::vector<bool> result(number_of_players, true);
     std::vector<unsigned char> rankings;
@@ -395,7 +400,7 @@ GameStatistics Halite::runGame(std::vector<std::string> * names_, unsigned int s
     });
     for(auto a = newRankings.begin(); a != newRankings.end(); a++) rankings.push_back(*a);
     std::reverse(rankings.begin(), rankings.end()); //Best player first rather than last.
-    GameStatistics stats;
+
     int chunkSize = game_map.map_width * game_map.map_height / number_of_players;
     for(unsigned char a = 0; a < number_of_players; a++) {
         PlayerStatistics p;

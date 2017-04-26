@@ -10,13 +10,17 @@ Membri: Stefan Adrian-Cosmin, 322CC
 ========== Mod de compilare ====================================================
 
 Compilarea se face din linia de comanda, folosind Makefile-ul, sursele si
-header-ele se afla in folderul src/, iar exacutabilul se afla in folderul curent.
+header-ele se afla in folderul src, iar executabilul se afla in folderul curent.
 
 ========== Surse de inspiratie =================================================
 
-Am pornit implementarea de la tutorialele de pe site-ul jocului si de forum:
-https://halite.io/basics_improve_random.php
-http://forums.halite.io/t/so-youve-improved-the-random-bot-now-what/482
+Am pornit implementarea de la tutorialele de pe site-ul jocului si de pe forum:
+[1] - https://halite.io/basics_improve_random.php
+[2] - http://forums.halite.io/t/so-youve-improved-the-random-bot-now-what/482
+[3] - http://forums.halite.io/t/early-mid-and-late-game/703
+
+In plus, am analizat si strategiile folosite de alti jucatori:
+[4] - https://halite.io/leaderboard.php
 
 ========== Detalii de implementare =============================================
 
@@ -33,14 +37,29 @@ strategia urmatoare:
     granita vecina cu care sa se combine, fara a face OVERFLOW. Pentru aceasta
     este tinuta o matrice cu puterile casutelor.
 
-Pentru determinarea unei mutari sa va face in timp constant O(1) pentru casutele
-de granita, iar pentru o casuta interioara se va face in O(height).
+Adaugari pentru ETAPA 2:
+    - Euristica a fost modficata, dupa modelul de la linkul [2], casutele
+    de granita prioritizand acum casutele cele mai vulnerabile ale inamicului.
+    Etapa de expansion a ramas nemodificata.
+    - Am adaugat o metoda de corectie a pierderii de putere folosind urmatorul
+    algoritm:
+        Gaseste toate piesele care au puterea peste 255. Daca o piesa este
+        STILL mut-o in directia unei piese care intra in acea casuta. Altfel,
+        redirecteaza una din piesele care intra in acea casuta. Redirectarea
+        se va face la stanga sau la dreapta, astfel incat sa se minimizeze
+        pierderea de putere (O mutare in directia opusa ar fi inutila, deoarece
+        este in opozitie cu traseul ales pentru acea piesa).
+        Algoritmul se repeta pana cand nu se mai pot face corectari.
 
-Complexitatea totala a algoritmului folosit va fi asadar O(width * (height ^ 2))
+Determinarea unei mutari se va face in timp constant O(1) pentru casutele
+de granita, iar pentru o casuta interioara se va face in O(height). Corectia
+puterii se face in O((width * height) ^ 2).
+
+Complexitatea totala a algoritmului folosit va fi asadar O((width * height) ^ 2)
 
 ========== Credits =============================================================
 
 App design(organizarea codului) - Andrei Ciupitu
-Research & Strategie - Andrei Ciupitu & State Nicolae
+Research & Strategie - Andrei Ciupitu, State Nicolae & Stefan Adrian
 Algoritmul utilizat - Toti
 Implementare - Stefan Adrian & Serban Cochilet

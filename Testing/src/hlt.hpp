@@ -11,6 +11,7 @@
 #define EAST 2
 #define SOUTH 3
 #define WEST 4
+#define INF 999999;
 
 const int DIRECTIONS[] = {STILL, NORTH, EAST, SOUTH, WEST};
 const int CARDINALS[] = {NORTH, EAST, SOUTH, WEST};
@@ -134,8 +135,5 @@ namespace hlt
 			((l2Prod + m2.dir)*(l2Prod + m2.dir + 1) / 2) + m2.dir;
     }
 }
-
-
-double evaluate(hlt::Site site);
 
 #endif

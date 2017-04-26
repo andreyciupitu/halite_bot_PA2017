@@ -5,8 +5,10 @@ import json
 from subprocess import call
 
 import argparse
-from pprint import pprint as pp
 import math
+from pprint import pprint as pp
+
+import platform
 
 
 def produce_game_environment():
@@ -33,16 +35,42 @@ def check_env():
     call(["rm -rf *.hlt; rm -rf replays; mkdir -p replays;"], shell=True)
 
 
+def view_replay(browser, log):
+
+    output_filename = log.replace(".hlt", ".htm")
+    path_to_file    = os.path.join("visualizer", output_filename)
+
+    if not os.path.exists(output_filename):
+
+        # parse replay file
+        with open(log, 'r') as f:
+            replay_data = f.read()
+
+        # parse template html
+        with open(os.path.join("visualizer", "Visualizer.htm")) as f:
+            html = f.read()
+
+        html = html.replace("FILENAME", log)
+        html = html.replace("REPLAY_DATA", replay_data)
+
+        # dump replay html file
+        with open(os.path.join("visualizer", output_filename), 'w') as f:
+            f.write(html)
+
+    with open("/dev/null") as null:
+        call(browser + " " + path_to_file + " &", shell=True, stderr=null, stdout=null)
+
+
 class HaliteEnv(object):
 
     def __init__(self,
-                 bot_cmd,
+                 player_bot_cmd,
                  height=30,
                  width=30,
                  seed=42,
                  max_turns=-1):
 
-        self.bot_cmd   = bot_cmd
+        self.bots      = [player_bot_cmd]
         self.height    = height
         self.width     = width
         self.seed      = seed
@@ -50,29 +78,32 @@ class HaliteEnv(object):
 
     def __add_map(self, cmd):
 
-        cmd += "-d \"" + str(self.height) + " " + str(self.width) + "\" "
-        cmd += "-s " + str(self.seed)
+        cmd += "-d \"{0} {1}\" ".format(self.width, self.height)
+        cmd += "-s {0}".format(self.seed)
         return cmd
 
     def __add_bot(self, cmd, bot_cmd):
 
-        cmd += " \"" + bot_cmd + "\""
+        cmd += " \"{0}\"".format(bot_cmd)
         return cmd
 
     def __add_turn_limit(self, cmd):
 
         if self.max_turns > 0:
-            cmd += " --max_turns " + str(self.max_turns) + " "
-
+            cmd += " --max_turns {0} ".format(self.max_turns)
         return cmd
 
     def run(self):
+
+        sys.stdout.write("Map: Height {0}, Width {1}, Seed {2}\n".format(self.height, self.width, self.seed))
 
         cmd = "./halite -q "
         cmd = self.__add_map(cmd)
         cmd = self.__add_turn_limit(cmd)
 
-        cmd = self.__add_bot(cmd, self.bot_cmd)
+        for bot in self.bots:
+            cmd = self.__add_bot(cmd, bot)
+
         call([cmd], shell=True)
 
         result = None
@@ -81,7 +112,8 @@ class HaliteEnv(object):
                 result = file
 
         if result is None:
-            sys.stderr.write("There was an error during the game, no valid replay file was produced!\n")
+            sys.stderr.write("There was an error during the game, "
+                             "no valid replay file was produced!\n")
             return None
 
         return result
@@ -95,7 +127,7 @@ def compute_score(player_result, soft_limit, hard_limit, game_weight):
     return game_weight * (1 - (player_result - soft_limit) / (hard_limit - soft_limit))
 
 
-def round_one(cmd):
+def round_one(cmd, browser=None):
 
     sys.stdout.write("Round 1 - single player map conquest!\n")
 
@@ -150,17 +182,63 @@ def round_one(cmd):
 
             sys.stdout.write("Map score: " + str(points) + "\n")
 
+        if browser:
+            view_replay(browser, log)
+
         call(["mv " + log + " ./replays"], shell=True)
 
     sys.stdout.write("Round 1 - done!\n")
     sys.stdout.write("Final score: " + str(player_score) + "/" + str(max_score) + "\n")
 
 
-def round_two():
-    pass
+def round_two(cmd, browser=None):
+
+    sys.stdout.write("Round 2 - 1vs1 battles!\n")
+    # https://ocw.cs.pub.ro/courses/pa/regulament-proiect
+
+    env = HaliteEnv(cmd)
+    games = [
+        (28, 24, 314, 0.1),
+        (30, 30, 42, 0.1),
+        (40, 40, 154, 0.1),
+        (30, 50, 3, 0.1),
+        (50, 50, 42, 0.1),
+    ]
+
+    arch, _ = platform.architecture()
+    env.bots.append("./bots/DBot_linux_" + arch)
+
+    player_score = 0.0
+
+    for height, width, seed, points in games:
+
+        env.height = height
+        env.width  = width
+        env.seed   = seed
+
+        log = env.run()
+
+        with open(log, "r") as f:
+
+            result = json.loads(f.read())
+            if result["winner"] != "DBotv2":
+                sys.stdout.write("Victory")
+                player_score += points
+            else:
+                sys.stdout.write("Defeat")
+
+            sys.stdout.write(" in {0} steps!\n\n".format(result["num_frames"] - 1))
+
+        if browser:
+            view_replay(browser, log)
+
+        call(["mv {0} ./replays".format(log)], shell=True)
+
+    sys.stdout.write("Round 2 - done!\n")
+    sys.stdout.write("Final score: {0}\n".format(player_score))
 
 
-def round_three():
+def round_three(cmd, browser=None):
     pass
 
 
@@ -174,8 +252,9 @@ def main():
 
     parser = argparse.ArgumentParser(description='PA project evaluator')
     parser.add_argument('--cmd', required=True, help="Command line instruction to execute the bot. eg: ./MyBot")
-    parser.add_argument('--round', type=int, default=1, help="Round index (1, 2, or 3), default 1")
+    parser.add_argument('--round', type=int, default=2, help="Round index (1, 2, or 3), default 1")
     parser.add_argument('--clean', action="store_true", help="Remove logs/game results, call make clean")
+    parser.add_argument('--visualizer', help="Display replays in browser; eg. \"firefox\", \"google-chrome-stable\"")
     args = parser.parse_args()
 
     check_env()
@@ -187,7 +266,7 @@ def main():
         exit(1)
 
     # Let the games begin!
-    rounds[args.round - 1](args.cmd)
+    rounds[args.round - 1](args.cmd, args.visualizer)
 
     if args.clean:
         cleanup()

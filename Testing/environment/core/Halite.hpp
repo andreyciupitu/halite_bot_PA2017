@@ -84,6 +84,9 @@ private:
 
     std::vector<bool> processNextFrame(std::vector<bool> alive);
     void output(std::string filename);
+
+    GameStatistics stats;
+
 public:
     Halite(unsigned short width_, 
            unsigned short height_, 
@@ -93,7 +96,7 @@ public:
            bool shouldIgnoreTimeout,
            int max_turn_number);
 
-    GameStatistics runGame(std::vector<std::string> * names_, unsigned int seed, unsigned int id);
+    GameStatistics& runGame(std::vector<std::string> * names_, unsigned int seed, unsigned int id);
     std::string getName(unsigned char playerTag);
 
     ~Halite();
