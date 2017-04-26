@@ -3,30 +3,25 @@
 
 #include "Player.hpp"
 
-#define WAIT_TIME 5
-
-Player::Player(int width, int height, unsigned char id)
+Player::Player(hlt::GameMap &map, unsigned char id) : map(map)
 {
 	this->id = id;
-	strengthMap = std::vector<std::vector<unsigned char>>(width, std::vector<unsigned char>(height, 0));
+	strengthMap = std::vector< std::vector<int> >(map.width, std::vector<int>(map.height, 0));
+	directionMap = std::vector< std::vector<int> >(map.width, std::vector<int>(map.height, 0));
 }
 
-int Player::get_nearest_border(hlt::GameMap &map, hlt::Location l)
+int Player::get_nearest_border(hlt::Location l)
 {
-	/* TARANEALA --------------
-
-		NEAREST TILE NOT OWNED BY ME
-
-	*/
-
 	int min_distance = map.height / 2;
 	int direction = SOUTH;
 
-	// TODO add heuristic here too
+// TODO add heuristic here too
 	for (int i = 0; i < 4; i++)
 	{
 		int distance = 0;
 		hlt::Location current_tile = l;
+
+		/* STOP AT THE FIRST ENEMY TILE */
 		while (map.getSite(current_tile).owner == id && distance < min_distance)
 		{
 			distance++;
@@ -41,10 +36,9 @@ int Player::get_nearest_border(hlt::GameMap &map, hlt::Location l)
 	return direction;
 }
 
-hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
+int Player::make_a_move(hlt::Location l)
 {
-	hlt::Move result_move;
-	result_move.loc = l;
+	int result_move = STILL;
 
 	/* CURRENT TILE */
 	hlt::Site site = map.getSite(l);
@@ -52,13 +46,13 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 	/* CHECK IF THE TILE SHOULD MOVE */
 	if (site.strength < WAIT_TIME * site.production || site.strength == 0)
 	{
-		updateStrengthMap(map, l, STILL);
-		result_move.dir = STILL;
+		updateStrengthMap(l, STILL);
+		result_move = STILL;
 		return result_move;
 	}
 
 	/* IF THE TILE IS ON BORDER */
-	if (isOnBorder(map, l))
+	if (isOnBorder(l))
 	{
 		/* ATTACK IF POSSIBLE CHOOSING THE BEST TILE */
 		double maxScore = 0;
@@ -68,7 +62,7 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 			hlt::Site nextSite = map.getSite(l, CARDINALS[i]);
 			if (nextSite.owner != id && nextSite.strength < site.strength)
 			{
-				double score = evaluate(nextSite);
+				double score = evaluate(map.getLocation(l, CARDINALS[i]));
 				if (score >= maxScore)
 				{
 					maxScore = score;
@@ -78,37 +72,34 @@ hlt::Move Player::make_a_move(hlt::GameMap &map, hlt::Location l)
 		}
 
 		/* CAN'T ATTACK => STILL*/
-		result_move.dir = bestMove;
+		result_move = bestMove;
 
-		/* Check if it's better to combine
-		with a neighbouring tile */
+		/* Check if it's better to combine with a neighbouring tile */
 		if (bestMove == STILL)
 			for (int i = 0; i < 4; i++)
 			{
 				int maxStrength = strengthMap[l.x][l.y] + site.production;
 				hlt::Location neighbour = map.getLocation(l, CARDINALS[i]);
-				if (map.getSite(neighbour).owner == id && isOnBorder(map, neighbour))
+				int result = site.strength + strengthMap[neighbour.x][neighbour.y];
+				if (map.getSite(neighbour).owner == id
+					&& isOnBorder(neighbour) && result > maxStrength)
 				{
-					if (site.strength + strengthMap[neighbour.x][neighbour.y] > maxStrength
-						&& site.strength + strengthMap[neighbour.x][neighbour.y] <= 255)
-					{
-						maxStrength = site.strength + strengthMap[neighbour.x][neighbour.y];
-						result_move.dir = CARDINALS[i];
-					}
+					maxStrength = result;
+					result_move = CARDINALS[i];
 				}
 			}
 
-		updateStrengthMap(map, l, result_move.dir);
+		updateStrengthMap(l, result_move);
 		return result_move;
 	}
 
 	/* SEND THE TILE TO A BORDER */
-	result_move.dir = get_nearest_border(map, l);
-	updateStrengthMap(map, l, result_move.dir);
+	result_move = get_nearest_border(l);
+	updateStrengthMap(l, result_move);
 	return result_move;
 }
 
-bool Player::isOnBorder(hlt::GameMap &map, hlt::Location l)
+bool Player::isOnBorder(hlt::Location l)
 {
 	for (int i = 0; i < 4; i++)
 		if (map.getSite(l, CARDINALS[i]).owner != id)
@@ -116,7 +107,116 @@ bool Player::isOnBorder(hlt::GameMap &map, hlt::Location l)
 	return false;
 }
 
-void Player::updateStrengthMap(hlt::GameMap &map, hlt::Location l, int direction)
+void Player::assignMoves()
+{
+	for(unsigned short i = 0; i < map.width; i++)
+		for(unsigned short j = 0; j < map.height; j++)
+			if (map.getSite({ i, j }).owner == id)
+				directionMap[i][j] = make_a_move({i, j});
+}
+
+std::set<hlt::Move> Player::getMoveSet()
+{
+	std::set<hlt::Move> moves;
+	for(unsigned short i = 0; i < map.width; i++)
+		for(unsigned short j = 0; j < map.height; j++)
+			if (map.getSite({ i, j }).owner == id)
+			{
+				hlt::Move move;
+				move.dir = directionMap[i][j];
+				move.loc.x = i;
+				move.loc.y = j;
+				moves.insert(move);
+			}
+	return moves;
+}
+
+void Player::getMapDetails()
+{
+	for(unsigned short i = 0; i < map.width; i++)
+		for(unsigned short j = 0; j < map.height; j++)
+		{
+			hlt::Site site = map.getSite({ i, j });
+			if (site.owner == id)
+			{
+				directionMap[i][j] = STILL;
+				strengthMap[i][j] = site.strength;
+			}
+			else
+			{
+				/* Enemy tiles don't have any assigned moves,
+				and negative initial score for easier mapping */
+				strengthMap[i][j] = -1 * site.strength;
+				directionMap[i][j] = -1;
+			}
+		}
+}
+
+int Player::canSaveStrength()
+{
+	int count = 0;
+	for (unsigned short i = 0; i < map.width; i++)
+		for (unsigned short j = 0; j < map.height; j++)
+			if (strengthMap[i][j] > 255)
+			{
+				count++;
+
+				/* MOVE THE TILE IF IT STAYS STILL
+				(SWAPS IT WITH AN INBOUND TILE) */
+				if (directionMap[i][j] == STILL && map.getSite({i, j}).strength > 0)
+					for (int k = 0; k < 4; k++)
+					{
+						int back = (CARDINALS[k] + 2) % 4;
+						hlt::Location neighbour = map.getLocation({i, j}, CARDINALS[k]);
+						if (directionMap[neighbour.x][neighbour.y] == back)
+						{
+							updateStrengthMap({i, j}, CARDINALS[k]);
+							directionMap[i][j] = CARDINALS[k];
+							break;
+						}
+					}
+				else
+					for (int k = 0; k < 4; k++)
+					{
+						int back = (CARDINALS[k] + 2) % 4;
+						int right = (CARDINALS[k] + 1) % 4;
+						int left = (CARDINALS[k] + 3) % 4;
+						hlt::Location neighbour = map.getLocation({i, j}, CARDINALS[k]);
+						hlt::Site nextTile = map.getSite(neighbour);
+						hlt::Location rightChoice = map.getLocation(neighbour, right);
+						hlt::Location leftChoice = map.getLocation(neighbour, left);
+
+						/* Attempt to redirect an inbound tile, either to the
+						right, or to the left, minimizing the strenght loss
+						(backwards is useless!!!) */
+						if (directionMap[neighbour.x][neighbour.y] == back && nextTile.owner == id)
+						{
+							int move_right = nextTile.strength + strengthMap[rightChoice.x][rightChoice.y];
+							int move_left = nextTile.strength + strengthMap[leftChoice.x][leftChoice.y];
+
+							if (move_left < move_right && move_left < strengthMap[i][j])
+							{
+								updateStrengthMap(neighbour, left);
+								directionMap[neighbour.x][neighbour.y] = left;
+							}
+							else
+								if (move_right < strengthMap[i][j])
+								{
+									updateStrengthMap(neighbour, right);
+									directionMap[neighbour.x][neighbour.y] = right;
+								}
+								else
+									continue;
+
+							/* BREAK IF SUCCESS */
+							break;
+						}
+					}
+			}
+	return count;
+}
+
+void Player::updateStrengthMap(hlt::Location l, int direction)
 {
 	hlt::Site site = map.getSite(l);
 
@@ -125,14 +225,32 @@ void Player::updateStrengthMap(hlt::GameMap &map, hlt::Location l, int direction
 		strengthMap[l.x][l.y] += site.production;
 	else
 	{
+		/* CURRENT TILE MOVES AWAY */
 		strengthMap[l.x][l.y] -= site.strength;
+
+		/* COMBINES WITH DESTINATION */
 		hlt::Location neighbour = map.getLocation(l, direction);
 		strengthMap[neighbour.x][neighbour.y] += site.strength;
 	}
 }
 
-/* EXPANSION HEURISTIC */
-double Player::evaluate(hlt::Site site)
+double Player::evaluate(hlt::Location l)
 {
-	return site.strength == 0 ? site.production : site.production / (double)site.strength;
+	hlt::Site site = map.getSite(l);
+
+	/* NPC TILE */
+	if (site.owner == 0 && site.strength > 0)
+		return site.production / (double)site.strength;
+	else
+	{
+		/* ENEMY TILE */
+		int damageTaken = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			hlt::Site neighbour = map.getSite(l, i);
+			if (neighbour.owner != site.owner)
+				damageTaken += neighbour.strength;
+		}
+		return damageTaken;
+	}
 }
