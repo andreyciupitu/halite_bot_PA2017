@@ -9,12 +9,12 @@ SOURCES=$(wildcard $(SRCDIR)/*.cpp)
 INCLUDES=$(wildcard $(SRCDIR)/*.hpp)
 OBJECTS=$(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
-EXECUTABLE="202.exe"
+EXECUTABLE="./202.exe"
 
 build: $(EXECUTABLE)
 
 run: $(EXECUTABLE)
-	./halite.exe -d "50 50" -s 42 $(EXECUTABLE)
+	./halite -d "40 40" -s 10 $(EXECUTABLE) "./DBotv4_linux_x64" "./DBotv4_linux_x64" "./DBotv4_linux_x64"
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@

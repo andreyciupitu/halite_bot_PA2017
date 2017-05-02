@@ -45,7 +45,10 @@ Adaugari pentru ETAPA 2:
     Etapa de expansion a ramas nemodificata.
     - Am adaugat o metoda de corectie a pierderii de putere folosind urmatorul
     algoritm:
-        Gaseste toate piesele care au puterea peste 255. Daca o piesa este
+        Se retin puterile in directiile pentru fiecare casuta in 2 matrici
+        auxiliare.
+        Dupa ce s-a asignat cate o mutare pentru fiecare piesa, gaseste toate
+        piesele care au puterea peste 255. Daca o piesa este
         STILL mut-o in directia unei piese care intra in acea casuta. Altfel,
         redirecteaza una din piesele care intra in acea casuta. Redirectarea
         se va face la stanga sau la dreapta, astfel incat sa se minimizeze
