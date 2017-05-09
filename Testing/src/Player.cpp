@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <queue>
+#include <utility>
 #include "hlt.hpp"
 
 #include "Player.hpp"
@@ -8,31 +10,44 @@ Player::Player(hlt::GameMap &map, unsigned char id) : map(map)
 	this->id = id;
 	strengthMap = std::vector< std::vector<int> >(map.width, std::vector<int>(map.height, 0));
 	directionMap = std::vector< std::vector<int> >(map.width, std::vector<int>(map.height, 0));
+	earlyGame = true;
+	scoreMap = std::vector< std::vector<double> >(map.width, std::vector<double>(map.height, -1));
 }
 
 int Player::get_nearest_border(hlt::Location l)
 {
 	int min_distance = map.height / 2;
 	int direction = SOUTH;
+	double bestScore = 0;
 
-// TODO add heuristic here too
-	for (int i = 0; i < 4; i++)
-	{
-		int distance = 0;
-		hlt::Location current_tile = l;
+	if (earlyGame)
+		for (int i = 0; i < 4; i++)
+		{
+			int distance = 0;
+			hlt::Location current_tile = l;
 
-		/* STOP AT THE FIRST ENEMY TILE */
-		while (map.getSite(current_tile).owner == id && distance < min_distance)
-		{
-			distance++;
-			current_tile = map.getLocation(current_tile, CARDINALS[i]);
+			/* STOP AT THE FIRST ENEMY TILE */
+			while (map.getSite(current_tile).owner == id && distance < min_distance)
+			{
+				distance++;
+				current_tile = map.getLocation(current_tile, CARDINALS[i]);
+			}
+			if (distance < min_distance)
+			{
+				min_distance = distance;
+				direction = CARDINALS[i];
+			}
 		}
-		if (distance < min_distance)
+	else
+		for (int i = 0; i < 4; i++)
 		{
-			min_distance = distance;
-			direction = CARDINALS[i];
+			hlt::Location neighbour = map.getLocation(l, CARDINALS[i]);
+			if (scoreMap[neighbour.x][neighbour.y] > bestScore)
+			{
+				bestScore = scoreMap[neighbour.x][neighbour.y];
+				direction = CARDINALS[i];
+			}
 		}
-	}
 	return direction;
 }
 
@@ -81,8 +96,7 @@ int Player::make_a_move(hlt::Location l)
 				int maxStrength = strengthMap[l.x][l.y] + site.production;
 				hlt::Location neighbour = map.getLocation(l, CARDINALS[i]);
 				int result = site.strength + strengthMap[neighbour.x][neighbour.y];
-				if (map.getSite(neighbour).owner == id && isOnBorder(neighbour)
-					&& result > maxStrength)
+				if (map.getSite(neighbour).owner == id && isOnBorder(neighbour) && result > maxStrength)
 				{
 					maxStrength = result;
 					result_move = CARDINALS[i];
@@ -133,10 +147,12 @@ std::set<hlt::Move> Player::getMoveSet()
 
 void Player::getMapDetails()
 {
+	std::priority_queue< std::pair<double, hlt::Location> > q;
 	for(unsigned short i = 0; i < map.width; i++)
 		for(unsigned short j = 0; j < map.height; j++)
 		{
 			hlt::Site site = map.getSite({ i, j });
+			scoreMap[i][j] = -1;
 			if (site.owner == id)
 			{
 				directionMap[i][j] = STILL;
@@ -144,12 +160,32 @@ void Player::getMapDetails()
 			}
 			else
 			{
+				hlt::Location current = { i, j };
+				q.push(std::pair<double, hlt::Location>(evaluate(current), current));
+
 				/* Enemy tiles don't have any assigned moves,
 				and negative initial score for easier mapping */
 				strengthMap[i][j] = -1 * site.strength;
 				directionMap[i][j] = -1;
 			}
 		}
+	int count = 0;
+	while (count < map.height * map.width)
+	{
+		std::pair<double, hlt::Location> current = q.top();
+		hlt::Location tile = current.second;
+		q.pop();
+		if (scoreMap[tile.x][tile.y] != -1)
+			continue;
+		count++;
+		scoreMap[tile.x][tile.y] = current.first;
+		for (int i = 0; i < 4; i++)
+		{
+			hlt::Location next = map.getLocation(tile, CARDINALS[i]);
+		 	double score = 0.9 * scoreMap[tile.x][tile.y] + 0.1 * evaluate(next);
+			q.push(std::pair<double, hlt::Location>(score, next));
+		}
+	}
 }
 
 int Player::canSaveStrength()
@@ -194,6 +230,8 @@ int Player::canSaveStrength()
 							int move_right = nextTile.strength + strengthMap[rightChoice.x][rightChoice.y];
 							int move_left = nextTile.strength + strengthMap[leftChoice.x][leftChoice.y];
 
+							/* Choose the direction that saves the most strength,
+							or try another tile if no strength can be saved */
 							if (move_left < move_right && move_left < strengthMap[i][j])
 							{
 								updateStrengthMap(neighbour, left);
@@ -240,14 +278,14 @@ double Player::evaluate(hlt::Location l)
 
 	/* NPC TILE */
 	if (site.owner == 0 && site.strength > 0)
-		return site.production / (double)site.strength;
+		return site.production * 500 / (double)site.strength;
 	else
 	{
 		/* ENEMY TILE */
 		int damageTaken = 0;
 		for (int i = 0; i < 4; i++)
 		{
-			hlt::Site neighbour = map.getSite(l, i);
+			hlt::Site neighbour = map.getSite(l, CARDINALS[i]);
 			if (neighbour.owner != site.owner)
 				damageTaken += neighbour.strength;
 		}

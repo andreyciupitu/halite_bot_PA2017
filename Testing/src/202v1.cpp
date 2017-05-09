@@ -15,6 +15,7 @@ int main()
 
 	/* ERROR/DEBUG LOG FILE */
 	std::ofstream fout("output_log.txt");
+    fout.close();
 
     unsigned char myID;
     hlt::GameMap presentMap;
@@ -24,14 +25,17 @@ int main()
 	Player bot(presentMap, myID);
 
 	/* START GAME */
-    sendInit("202v2");
+    sendInit("202v3");
 
     std::set<hlt::Move> moves;
+    int count = 0;
     while(true)
 	{
 		/* RESET MOVES */
         moves.clear();
-
+        count++;
+        if (count > 100)
+            bot.earlyGame = false;
         getFrame(presentMap);
 
 		/* GET MAP STRENGHT & REINITIALIZE DIRECTIONS */
@@ -58,6 +62,5 @@ int main()
         sendFrame(moves);
     }
 
-    fout.close();
     return 0;
 }

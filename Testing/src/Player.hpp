@@ -12,7 +12,8 @@ class Player
 public:
 	hlt::GameMap &map;
 	unsigned char id;
-
+	bool earlyGame;
+	
 	Player(hlt::GameMap &map, unsigned char id);
 
 	/**
@@ -54,6 +55,7 @@ public:
 private:
 	std::vector< std::vector<int> > strengthMap;
 	std::vector< std::vector<int> > directionMap;
+	std::vector< std::vector<double> > scoreMap;
 
 	/**
 	 * Main funtion used to assign a move to a given tile.

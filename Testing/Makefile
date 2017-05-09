@@ -14,7 +14,11 @@ EXECUTABLE="./202.exe"
 build: $(EXECUTABLE)
 
 run: $(EXECUTABLE)
-	./halite -d "40 40" -s 10 $(EXECUTABLE) "./DBotv4_linux_x64" "./DBotv4_linux_x64" "./DBotv4_linux_x64"
+	./halite -d "40 40" -s 3 $(EXECUTABLE) "./starkbot_linux_x64" "./DBotv4_linux_x64" "./DBotv4_linux_x64"
+	./halite -d "40 40" -s 4 $(EXECUTABLE) "./starkbot_linux_x64" "./starkbot_linux_x64" "./starkbot_linux_x64"
+	./halite -d "40 40" -s 5 $(EXECUTABLE) "./DBotv4_linux_x64" "./starkbot_linux_x64" "./DBotv4_linux_x64"
+	./halite -d "40 40" -s 8 $(EXECUTABLE) "./DBotv4_linux_x64" "./DBotv4_linux_x64" "./DBotv4_linux_x64"
+	./halite -d "40 40" -s 10 $(EXECUTABLE) "./DBotv4_linux_x64" "./DBotv4_linux_x64" "./starkbot_linux_x64"
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
