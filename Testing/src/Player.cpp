@@ -77,7 +77,7 @@ int Player::make_a_move(hlt::Location l)
 			hlt::Site nextSite = map.getSite(l, CARDINALS[i]);
 			if (nextSite.owner != id && nextSite.strength < site.strength)
 			{
-				double score = evaluate(map.getLocation(l, CARDINALS[i]));
+				double score = borderEvaluate(map.getLocation(l, CARDINALS[i]));
 				if (score >= maxScore)
 				{
 					maxScore = score;
@@ -182,7 +182,10 @@ void Player::getMapDetails()
 		for (int i = 0; i < 4; i++)
 		{
 			hlt::Location next = map.getLocation(tile, CARDINALS[i]);
-		 	double score = 0.9 * scoreMap[tile.x][tile.y] + 0.1 * evaluate(next);
+			double alpha = 0.1;
+			if (map.getSite(next).owner == id)
+				alpha = 0.5;
+		 	double score = (1 - alpha) * scoreMap[tile.x][tile.y] + alpha * evaluate(next);
 			q.push(std::pair<double, hlt::Location>(score, next));
 		}
 	}
@@ -275,10 +278,18 @@ void Player::updateStrengthMap(hlt::Location l, int direction)
 double Player::evaluate(hlt::Location l)
 {
 	hlt::Site site = map.getSite(l);
+	if (site.owner != id && site.strength > 0)
+		return (double)site.strength / site.production;
+	return -borderEvaluate(l);
+}
+
+double Player::borderEvaluate(hlt::Location l)
+{
+	hlt::Site site = map.getSite(l);
 
 	/* NPC TILE */
 	if (site.owner == 0 && site.strength > 0)
-		return site.production * 500 / (double)site.strength;
+		return site.production / (double)site.strength;
 	else
 	{
 		/* ENEMY TILE */
@@ -286,9 +297,10 @@ double Player::evaluate(hlt::Location l)
 		for (int i = 0; i < 4; i++)
 		{
 			hlt::Site neighbour = map.getSite(l, CARDINALS[i]);
-			if (neighbour.owner != site.owner)
-				damageTaken += neighbour.strength;
+			if (neighbour.owner != site.owner && neighbour.owner != 0)
+				damageTaken += 1;
 		}
 		return damageTaken;
 	}
+
 }

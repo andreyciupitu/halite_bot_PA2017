@@ -56,6 +56,9 @@ Adaugari pentru ETAPA 2:
         este in opozitie cu traseul ales pentru acea piesa).
         Algoritmul se repeta pana cand nu se mai pot face corectari.
 
+ETAPA 3:
+    Nu am facut modficari suplimentare.
+
 Determinarea unei mutari se va face in timp constant O(1) pentru casutele
 de granita, iar pentru o casuta interioara se va face in O(height). Corectia
 puterii se face in O((width * height) ^ 2).

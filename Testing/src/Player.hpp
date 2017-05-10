@@ -13,7 +13,7 @@ public:
 	hlt::GameMap &map;
 	unsigned char id;
 	bool earlyGame;
-	
+
 	Player(hlt::GameMap &map, unsigned char id);
 
 	/**
@@ -114,6 +114,7 @@ private:
 	 * @return The score given to the tile.
 	 */
 	double evaluate(hlt:: Location l);
+	double borderEvaluate(hlt::Location l);
 };
 
 #endif // !PLAYER_H
